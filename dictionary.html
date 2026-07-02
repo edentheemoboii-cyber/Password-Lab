@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Password Lab | Dictionary Attack</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="https://pyscript.net/releases/2025.8.1/core.css">
+  <script type="module" src="https://pyscript.net/releases/2025.8.1/core.js"></script>
+</head>
+<body>
+<div class="topbar">
+  <div class="nav-wrap">
+    <div class="logo">
+      <a class="text_decorate" href="projecthomepage.html">PASSWORD LAB</a>
+    </div>
+    <nav>
+      <a class="" href="projecthomepage.html">Home</a>
+<a class="active" href="dictionary.html">Dictionary</a>
+<a class="" href="bruteforce.html">Brute Force</a>
+<a class="" href="encryption.html">Encryption</a>
+<a class="" href="results.html">Results</a>
+<a class="" href="team.html">Team</a>
+    </nav>
+  </div>
+</div>
+<main>
+<h1>Dictionary Attack</h1>
+
+<section class="card">
+  <h2>What we tested</h2>
+  <p>
+    A dictionary attack uses a prepared list of common passwords. It is fast because it does
+    not test every possible combination. It only tests passwords that many people commonly use.
+  </p>
+  <p class="note">Use only your own test passwords. Do not test real accounts.</p>
+</section>
+
+
+<section class="card" id="interactive-dictionary">
+  <h2>Try It Yourself: Dictionary Attack Simulator</h2>
+  <p>
+    Type any password below. The Python code checks it against a list of common passwords
+    one by one, just like a real dictionary attack.
+  </p>
+  <input type="text" id="dict-input" placeholder="Type a password">
+  <button id="dict-btn">Run Dictionary Attack</button>
+  <div class="code-box" id="dict-output">Loading Python engine... this can take a few seconds the first time.</div>
+
+  <script type="py">
+import time
+from pyscript import document, when
+
+COMMON_PASSWORDS = [
+    "password1", "password2", "password3", "qwerty11", "qwerty22", "qwerty33", "abc1234", "abc12345", "abc123456",
+"welcome01", "welcome02", "welcome03", "letmein1", "letmein2", "letmein3", "admin001", "admin002", "admin003",
+"user1234", "user12345", "user123456", "test0001", "test0002", "test0003", "hello123", "hello234", "hello345",
+"dragon01", "dragon02", "dragon03", "monkey11", "monkey22", "monkey33", "shadow01", "shadow02", "shadow03",
+"sunshine1", "sunshine2", "sunshine3", "football1", "football2", "football3", "master11", "master22", "master33",
+"iloveyou1", "iloveyou2", "iloveyou3", "princess1", "princess2", "princess3", "ninja001", "ninja002", "ninja003",
+"flower11", "flower22", "flower33", "summer01", "summer02", "summer03", "winter11", "winter22", "winter33",
+"cookie01", "cookie02", "cookie03", "laptop11", "laptop22", "laptop33", "mobile01", "mobile02", "mobile03",
+"star1234", "star2345", "star3456", "cloud001", "cloud002", "cloud003", "tiger111", "tiger222", "tiger333",
+"lion1234", "lion2345", "lion3456", "panda001", "panda002", "panda003", "ocean11", "ocean22", "ocean33",
+"forest01", "forest02", "forest03", "galaxy11", "galaxy22", "galaxy33", "rocket01", "rocket02", "rocket03",
+"planet11", "planet22", "planet33", "skyblue1", "skyblue2", "skyblue3", "rainbow1", "rainbow2", "rainbow3",
+"happy001", "happy002", "happy003", "lucky111", "lucky222", "lucky333", "magic01", "magic02", "magic03",
+"simple11", "simple22", "simple33", "number01", "number02", "number03", "secret11", "secret22", "secret33",
+"keyboard1", "keyboard2", "keyboard3", "mouse001", "mouse002", "mouse003", "gamer111", "gamer222", "gamer333",
+"alpha001", "alpha002", "alpha003", "beta001", "beta002", "beta003", "gamma001", "gamma002", "gamma003",
+"orange11", "orange22", "orange33", "banana01", "banana02", "banana03", "mango11", "mango22", "mango33",
+"coffee01", "coffee02", "coffee03", "tea111", "tea222", "tea333", "sugar01", "sugar02", "sugar03",
+"river111", "river222", "river333", "mountain1", "mountain2", "mountain3", "desert01", "desert02", "desert03",
+"car001", "car002", "car003", "bike111", "bike222", "bike333", "train01", "train02", "train03",
+"music11", "music22", "music33", "dance01", "dance02", "dance03", "movie11", "movie22", "movie33",
+"school01", "school02", "school03", "college11", "college22", "college33", "office01", "office02", "office03",
+"home111", "home222", "home333", "family01", "family02", "family03", "friend11", "friend22", "friend33",
+"cat001", "cat002", "cat003", "dog111", "dog222", "dog333", "bird01", "bird02", "bird03",
+"star001", "star002", "star003", "moon111", "moon222", "moon333", "space01", "space02", "space03",
+"blue111", "blue222", "blue333", "red001", "red002", "red003", "green11", "green22", "green33"
+]
+
+@when("click", "#dict-btn")
+def run_dictionary(event):
+    out = document.getElementById("dict-output")
+    pwd = document.getElementById("dict-input").value.strip()
+
+    if not pwd:
+        out.innerText = "Please enter a password."
+        return
+
+    out.innerText = "Running..."
+    start = time.time()
+    attempts = 0
+    cracked = False
+
+    for word in COMMON_PASSWORDS:
+        attempts += 1
+        if word == pwd.lower():
+            cracked = True
+            break
+
+    elapsed = time.time() - start
+    out.innerText = (
+        f"Password tested: {pwd}\n"
+        f"Cracked: {cracked}\n"
+        f"Attempts: {attempts} (out of {len(COMMON_PASSWORDS)} in the list)\n"
+        f"Time taken: {elapsed:.6f}s\n\n"
+        + ("This password is in the common-password list. Change it!" if cracked
+           else "This password was not found in the list, but that does not mean it is strong, "
+                "only that it is not one of these common ones.")
+    )
+
+document.getElementById("dict-output").innerText = "Ready. Enter a password and click Run Dictionary Attack."
+  </script>
+</section>
+
+<section class="card">
+  <h2>Result Table</h2>
+  <table>
+    <tr><th>Password</th><th>Type</th><th>Cracked?</th><th>Attempts</th><th>Time</th></tr>
+    <tr><td>password123</td><td>Weak</td><td class="bad">Yes</td><td>3</td><td>0.0001s</td></tr>
+    <tr><td>football</td><td>Weak</td><td class="bad">Yes</td><td>9</td><td>0.0001s</td></tr>
+    <tr><td>BlueCat2026</td><td>Memorable</td><td class="good">No</td><td>10</td><td>0.0001s</td></tr>
+    <tr><td>K7#mQ9!zP2</td><td>Random</td><td class="good">No</td><td>10</td><td>0.0001s</td></tr>
+  </table>
+  <p class="note">All results are for demonstration purposes only.</p>
+</section>
+
+
+</main>
+<footer>
+  Made By: Yuji, Rufaidah, Areeba, Danial
+</footer>
+</body>
+</html>
